@@ -1,5 +1,6 @@
 sudo: required
 language: generic
+
 services:
   - docker
 
@@ -7,16 +8,16 @@ before_install:
   - docker build -t nikhilknick/react-test -f ./client/Dockerfile.dev ./client
 
 script:
-  - docker run -e CI=true nikhilknick/react-test npm run test
+  - docker run -e CI=true nikhilknick/react-test npm test
 
 after_success:
-  - docker build -t nikhilknick/multi-client -f ./client
-  - docker build -t nikhilknick/multi-nginx -f ./nginx
-  - docker build -t nikhilknick/multi-server -f ./server
-  - docker build -t nikhilknick/multi-worker -f ./worker
-  # Log in to docker cli
+  - docker build -t nikhilknick/multi-client ./client
+  - docker build -t nikhilknick/multi-nginx ./nginx
+  - docker build -t nikhilknick/multi-server ./server
+  - docker build -t nikhilknick/multi-worker ./worker
+  # Log in to the docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  # Take those images and push to docker hub
+  # Take those images and push them to docker hub
   - docker push nikhilknick/multi-client
   - docker push nikhilknick/multi-nginx
   - docker push nikhilknick/multi-server
